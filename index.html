@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>LTL inspections · Payables · Loop</title>
+<meta name="description" content="Reclass Defense: evidence-graded dispute decisions for LTL reweigh and reclass adjustments, an unofficial concept demo for Loop.">
+<link rel="icon" href="assets/loop-l.svg">
+<link rel="preconnect" href="https://rsms.me">
+<link rel="stylesheet" href="https://rsms.me/inter/inter.css">
+<link rel="stylesheet" href="styles.css">
+<script src="https://unpkg.com/lucide@0.469.0/dist/umd/lucide.min.js" defer></script>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" aria-label="Main navigation">
+    <a class="logo" href="#/inspections" aria-label="Loop home"><img src="assets/loop-logo.svg" alt="Loop logo"></a>
+    <nav>
+      <ul class="nav" id="nav">
+        <li><a href="#/inspections" data-k="search"><i data-lucide="search"></i>Search</a></li>
+        <li class="divider" role="separator"></li>
+        <li><a href="#/inspections" data-k="home"><i data-lucide="house"></i>Home</a></li>
+        <li><a href="#/inspections" data-k="intel"><i data-lucide="lightbulb"></i>Intelligence</a></li>
+        <li class="divider" role="separator"></li>
+        <li><a href="#/inspections" data-k="vis"><i data-lucide="radio-tower"></i>Visibility</a></li>
+        <li><a href="#/inspections" data-k="org"><i data-lucide="globe"></i>Organizations</a></li>
+        <li><a href="#/inspections" data-k="views"><i data-lucide="eye"></i>Views</a></li>
+        <li><a href="#/inspections" data-k="freight"><i data-lucide="route"></i>Freight</a></li>
+        <li><a href="#/inspections" data-k="payables" class="active" aria-current="page"><i data-lucide="arrow-right"></i>Payables</a></li>
+        <li><a href="#/inspections" data-k="payments"><i data-lucide="banknote"></i>Payments</a></li>
+        <li><a href="#/inspections" data-k="recv"><i data-lucide="arrow-left"></i>Receivables</a></li>
+        <li><a href="#/inspections" data-k="pol"><i data-lucide="shield-check"></i>Policies</a></li>
+        <li><a href="#/inspections" data-k="exc"><i data-lucide="flag"></i>Exceptions</a></li>
+        <li><a href="#/inspections" data-k="art"><i data-lucide="file-text"></i>Artifacts</a></li>
+        <li><a href="#/inspections" data-k="set"><i data-lucide="settings"></i>Settings</a></li>
+      </ul>
+    </nav>
+    <div class="spacer"></div>
+    <div class="user"><span class="avatar" aria-hidden="true">MG</span><span>Northfield Snacks Co.<br>AP team</span></div>
+  </aside>
+  <main class="main" id="main" tabindex="-1">
+    <div id="view" aria-live="polite"></div>
+    <footer class="foot">
+      <span>Unofficial concept demo by Mohith Gajjela. Not affiliated with Loop. Synthetic data; NMFC density scale from NMFTA Docket 2025-1 (Bulletin 1371).</span>
+      <span>Press <kbd>?</kbd> for shortcuts · <a href="https://github.com/Mohith26/loop-reclass-defense">Source</a></span>
+    </footer>
+  </main>
+</div>
+<div id="layer"></div>
+<script type="module" src="app.js"></script>
+</body>
+</html>

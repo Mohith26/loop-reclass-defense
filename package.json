@@ -1,0 +1,1 @@
+{"type":"module","name":"loop-reclass-defense","private":true,"scripts":{"test":"node --test test/*.test.mjs","data":"node data/generate.mjs"}}
