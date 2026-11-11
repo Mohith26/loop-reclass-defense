@@ -184,7 +184,7 @@ function renderInspections() {
   </div>
   <div class="table-wrap">
   ${rows.length ? `<table class="grid" aria-label="LTL inspection adjustments">
-    <thead><tr><th><input type="checkbox" aria-label="Select all" id="selAll"></th><th>Invoice #</th><th>Carrier</th><th class="hide-lg">Shipment</th><th>Adjustment</th><th class="num">Billed change</th><th class="num hide-sm">Carrier pcf</th><th class="num">Your scans, pcf</th><th>Evidence</th><th>Recommendation</th><th>Status</th></tr></thead>
+    <thead><tr><th><input type="checkbox" aria-label="Select all" id="selAll"></th><th>Invoice #</th><th>Carrier</th><th class="hide-lg">Shipment</th><th>Adjustment</th><th class="num">Billed change</th><th class="num hide-lg">Carrier pcf</th><th class="num hide-sm">Your scans, pcf</th><th>Evidence</th><th>Recommended</th><th>Status</th></tr></thead>
     <tbody>${rows.map((r, i) => {
       const rg = S.ranges[r.invoice];
       return `<tr data-id="${r.invoice}" tabindex="0" class="${i === S.focus ? 'sel' : ''}" aria-label="Invoice ${r.invoice}">
@@ -194,8 +194,8 @@ function renderInspections() {
       <td class="hide-lg" title="${lane(r).origin} → ${lane(r).dest}">${r.id}</td>
       <td>${adjCell(r)}</td>
       <td class="num">${r.rerate.delta > 0 ? '+' : ''}${fmt$(r.rerate.delta)}</td>
-      <td class="num hide-sm">${fmtN(r.carrier.density)}</td>
-      <td class="num">${fmtN(rg.lo)}–${fmtN(rg.hi)}</td>
+      <td class="num hide-lg">${fmtN(r.carrier.density)}</td>
+      <td class="num hide-sm">${fmtN(rg.lo)}–${fmtN(rg.hi)}</td>
       <td>${evidenceCell(r, n)}</td>
       <td>${recBadge(r)}</td>
       <td>${statusBadge(r)}</td></tr>`;
@@ -366,11 +366,25 @@ function verdictText(r, units, extra, rg, stale) {
   return `The carrier's ${fmtN(r.carrier.density)} pcf is below the range your scans predict for these pallets (${fmtN(rg.lo)}–${fmtN(rg.hi)} pcf), which moved the shipment from class ${r.bol.cls} to ${r.carrier.cls}.`;
 }
 
+function carrierReason(r, units, rg) {
+  if (r.driver === 'count') return `Inspection certificate ${r.cert} lists ${r.carrier_measured.units.length} handling units. The bill of lading and our packing list show ${r.units.length}, and our dock dimensioner recorded ${r.units.length} pallets for this shipment.`;
+  if (r.driver === 'height') {
+    const u = units.reduce((a, b) => (b.zH > a.zH ? b : a));
+    return `The certificate records a ${u.meas.h} in height for a ${u.name} pallet. Our dimensioner has measured this build ${u.s.n} times with a median of ${fmtN(u.s.mh)} in (spread ±${fmtN(u.s.sh)} in); a ${u.meas.h} in reading suggests it was measured to the highest point or with adjacent freight.`;
+  }
+  if (r.driver === 'footprint') {
+    const u = units.find((x) => !x.fpOk) || units[0];
+    return `The certificate records a ${u.fp} in footprint. This pallet ships on a ${u.s.l}×${u.s.w} in base in all ${u.s.n} of our dimensioner scans, so the cube appears to include overhang.`;
+  }
+  if (r.driver === 'weight') return `The reweigh bills ${r.carrier.weight.toLocaleString()} lb. Our certified dock scale history for these pallets gives ${Math.round(r.expected.weight).toLocaleString()} lb ± ${pct(r.expected.sdLogW)}, and the BOL declares ${r.bol.weight.toLocaleString()} lb.`;
+  return `The inspected density of ${fmtN(r.carrier.density)} pcf is below the ${fmtN(rg.lo)}–${fmtN(rg.hi)} pcf our dimensioner records for these pallets.`;
+}
+
 function disputeNote(r, units, extra, rg) {
   return `To: ${r.carrierName} billing\nRe: Inspection adjustment on PRO ${r.pro} (invoice ${r.invoice}, cert ${r.cert})\n\n` +
-    `We dispute the ${r.kind.toLowerCase()} on this shipment. ${verdictText(r, units, extra, rg, false).replace(/<[^>]+>/g, '')}\n\n` +
+    `We dispute the ${r.kind.toLowerCase()} on this shipment. ${carrierReason(r, units, rg)}\n\n` +
     `Requested correction: rerate at class ${r.bol.cls}, ${r.bol.weight.toLocaleString()} lb (${fmt$(r.rerate.expected.total)} vs ${fmt$(r.rerate.billed.total)} billed). ` +
-    `Attached: BOL, packing list, dimensioner scan history for ${units.map((u) => u.pid).filter((v, i, a) => a.indexOf(v) === i).join(', ')}, inspection certificate ${r.cert}.`;
+    `Attached: BOL, packing list, dimensioner and scale records for ${units.map((u) => u.pid).filter((v, i, a) => a.indexOf(v) === i).join(', ')}, inspection certificate ${r.cert}.`;
 }
 function evidencePacket(r, units, rg) {
   return {
