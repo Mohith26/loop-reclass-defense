@@ -2,163 +2,163 @@
   "generated_by": "data/generate.mjs",
   "seeds": 200,
   "months_history": 12,
-  "open_adjustments_per_month": 40.44,
-  "calibration_size_mean": 323.18,
+  "open_adjustments_per_month": 40.63,
+  "calibration_size_mean": 322.23,
   "by_q": {
     "0.05": {
       "reclass_defense": {
-        "fdr": 0.0266,
-        "fdp_p90_across_shippers": 0.1053,
-        "share_of_shippers_fdp_over_20pct": 0.01,
-        "dollar_power": 0.9713,
-        "disputes_per_month": 12.17,
-        "wrong_disputes_per_month": 0.35,
-        "recovered_per_month": 765.22,
-        "overbilled_per_month": 783.19
+        "fdr": 0.0299,
+        "fdp_p90_across_shippers": 0.1111,
+        "share_of_shippers_fdp_over_20pct": 0.005,
+        "dollar_power": 0.9717,
+        "disputes_per_month": 12.39,
+        "wrong_disputes_per_month": 0.41,
+        "recovered_per_month": 784.17,
+        "overbilled_per_month": 805.68
       },
       "dispute_everything": {
-        "fdr": 0.667,
-        "fdp_p90_across_shippers": 0.8065,
+        "fdr": 0.6649,
+        "fdp_p90_across_shippers": 0.8108,
         "share_of_shippers_fdp_over_20pct": 1,
         "dollar_power": 1,
-        "disputes_per_month": 40.44,
-        "wrong_disputes_per_month": 26.86,
-        "recovered_per_month": 783.19,
-        "overbilled_per_month": 783.19
+        "disputes_per_month": 40.63,
+        "wrong_disputes_per_month": 26.87,
+        "recovered_per_month": 805.68,
+        "overbilled_per_month": 805.68
       },
       "rule_5pct": {
-        "fdr": 0.5215,
-        "fdp_p90_across_shippers": 0.7097,
+        "fdr": 0.515,
+        "fdp_p90_across_shippers": 0.7027,
         "share_of_shippers_fdp_over_20pct": 0.98,
-        "dollar_power": 0.9949,
-        "disputes_per_month": 27.2,
+        "dollar_power": 0.9945,
+        "disputes_per_month": 27.44,
         "wrong_disputes_per_month": 14.25,
-        "recovered_per_month": 779.27,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 800.66,
+        "overbilled_per_month": 805.68
       },
       "rule_10pct": {
-        "fdr": 0.2455,
-        "fdp_p90_across_shippers": 0.5,
-        "share_of_shippers_fdp_over_20pct": 0.525,
-        "dollar_power": 0.9484,
-        "disputes_per_month": 14.48,
-        "wrong_disputes_per_month": 3.56,
-        "recovered_per_month": 743.5,
-        "overbilled_per_month": 783.19
+        "fdr": 0.2357,
+        "fdp_p90_across_shippers": 0.45,
+        "share_of_shippers_fdp_over_20pct": 0.53,
+        "dollar_power": 0.9429,
+        "disputes_per_month": 14.71,
+        "wrong_disputes_per_month": 3.57,
+        "recovered_per_month": 761.89,
+        "overbilled_per_month": 805.68
       },
       "rule_20pct": {
-        "fdr": 0.0136,
+        "fdr": 0.0109,
         "fdp_p90_across_shippers": 0,
-        "share_of_shippers_fdp_over_20pct": 0.015,
-        "dollar_power": 0.8204,
-        "disputes_per_month": 7.75,
+        "share_of_shippers_fdp_over_20pct": 0.005,
+        "dollar_power": 0.8147,
+        "disputes_per_month": 7.87,
         "wrong_disputes_per_month": 0.1,
-        "recovered_per_month": 643.75,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 657.26,
+        "overbilled_per_month": 805.68
       }
     },
     "0.1": {
       "reclass_defense": {
-        "fdr": 0.0628,
+        "fdr": 0.063,
         "fdp_p90_across_shippers": 0.1667,
-        "share_of_shippers_fdp_over_20pct": 0.04,
-        "dollar_power": 0.9804,
-        "disputes_per_month": 12.98,
-        "wrong_disputes_per_month": 0.85,
-        "recovered_per_month": 769.89,
-        "overbilled_per_month": 783.19
+        "share_of_shippers_fdp_over_20pct": 0.045,
+        "dollar_power": 0.9841,
+        "disputes_per_month": 13.26,
+        "wrong_disputes_per_month": 0.87,
+        "recovered_per_month": 792.14,
+        "overbilled_per_month": 805.68
       },
       "dispute_everything": {
-        "fdr": 0.667,
-        "fdp_p90_across_shippers": 0.8065,
+        "fdr": 0.6649,
+        "fdp_p90_across_shippers": 0.8108,
         "share_of_shippers_fdp_over_20pct": 1,
         "dollar_power": 1,
-        "disputes_per_month": 40.44,
-        "wrong_disputes_per_month": 26.86,
-        "recovered_per_month": 783.19,
-        "overbilled_per_month": 783.19
+        "disputes_per_month": 40.63,
+        "wrong_disputes_per_month": 26.87,
+        "recovered_per_month": 805.68,
+        "overbilled_per_month": 805.68
       },
       "rule_5pct": {
-        "fdr": 0.5215,
-        "fdp_p90_across_shippers": 0.7097,
+        "fdr": 0.515,
+        "fdp_p90_across_shippers": 0.7027,
         "share_of_shippers_fdp_over_20pct": 0.98,
-        "dollar_power": 0.9949,
-        "disputes_per_month": 27.2,
+        "dollar_power": 0.9945,
+        "disputes_per_month": 27.44,
         "wrong_disputes_per_month": 14.25,
-        "recovered_per_month": 779.27,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 800.66,
+        "overbilled_per_month": 805.68
       },
       "rule_10pct": {
-        "fdr": 0.2455,
-        "fdp_p90_across_shippers": 0.5,
-        "share_of_shippers_fdp_over_20pct": 0.525,
-        "dollar_power": 0.9484,
-        "disputes_per_month": 14.48,
-        "wrong_disputes_per_month": 3.56,
-        "recovered_per_month": 743.5,
-        "overbilled_per_month": 783.19
+        "fdr": 0.2357,
+        "fdp_p90_across_shippers": 0.45,
+        "share_of_shippers_fdp_over_20pct": 0.53,
+        "dollar_power": 0.9429,
+        "disputes_per_month": 14.71,
+        "wrong_disputes_per_month": 3.57,
+        "recovered_per_month": 761.89,
+        "overbilled_per_month": 805.68
       },
       "rule_20pct": {
-        "fdr": 0.0136,
+        "fdr": 0.0109,
         "fdp_p90_across_shippers": 0,
-        "share_of_shippers_fdp_over_20pct": 0.015,
-        "dollar_power": 0.8204,
-        "disputes_per_month": 7.75,
+        "share_of_shippers_fdp_over_20pct": 0.005,
+        "dollar_power": 0.8147,
+        "disputes_per_month": 7.87,
         "wrong_disputes_per_month": 0.1,
-        "recovered_per_month": 643.75,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 657.26,
+        "overbilled_per_month": 805.68
       }
     },
     "0.2": {
       "reclass_defense": {
-        "fdr": 0.1275,
-        "fdp_p90_across_shippers": 0.2667,
-        "share_of_shippers_fdp_over_20pct": 0.205,
-        "dollar_power": 0.9868,
-        "disputes_per_month": 14.34,
-        "wrong_disputes_per_month": 1.9,
-        "recovered_per_month": 774.38,
-        "overbilled_per_month": 783.19
+        "fdr": 0.1286,
+        "fdp_p90_across_shippers": 0.25,
+        "share_of_shippers_fdp_over_20pct": 0.18,
+        "dollar_power": 0.9884,
+        "disputes_per_month": 14.62,
+        "wrong_disputes_per_month": 1.93,
+        "recovered_per_month": 795.78,
+        "overbilled_per_month": 805.68
       },
       "dispute_everything": {
-        "fdr": 0.667,
-        "fdp_p90_across_shippers": 0.8065,
+        "fdr": 0.6649,
+        "fdp_p90_across_shippers": 0.8108,
         "share_of_shippers_fdp_over_20pct": 1,
         "dollar_power": 1,
-        "disputes_per_month": 40.44,
-        "wrong_disputes_per_month": 26.86,
-        "recovered_per_month": 783.19,
-        "overbilled_per_month": 783.19
+        "disputes_per_month": 40.63,
+        "wrong_disputes_per_month": 26.87,
+        "recovered_per_month": 805.68,
+        "overbilled_per_month": 805.68
       },
       "rule_5pct": {
-        "fdr": 0.5215,
-        "fdp_p90_across_shippers": 0.7097,
+        "fdr": 0.515,
+        "fdp_p90_across_shippers": 0.7027,
         "share_of_shippers_fdp_over_20pct": 0.98,
-        "dollar_power": 0.9949,
-        "disputes_per_month": 27.2,
+        "dollar_power": 0.9945,
+        "disputes_per_month": 27.44,
         "wrong_disputes_per_month": 14.25,
-        "recovered_per_month": 779.27,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 800.66,
+        "overbilled_per_month": 805.68
       },
       "rule_10pct": {
-        "fdr": 0.2455,
-        "fdp_p90_across_shippers": 0.5,
-        "share_of_shippers_fdp_over_20pct": 0.525,
-        "dollar_power": 0.9484,
-        "disputes_per_month": 14.48,
-        "wrong_disputes_per_month": 3.56,
-        "recovered_per_month": 743.5,
-        "overbilled_per_month": 783.19
+        "fdr": 0.2357,
+        "fdp_p90_across_shippers": 0.45,
+        "share_of_shippers_fdp_over_20pct": 0.53,
+        "dollar_power": 0.9429,
+        "disputes_per_month": 14.71,
+        "wrong_disputes_per_month": 3.57,
+        "recovered_per_month": 761.89,
+        "overbilled_per_month": 805.68
       },
       "rule_20pct": {
-        "fdr": 0.0136,
+        "fdr": 0.0109,
         "fdp_p90_across_shippers": 0,
-        "share_of_shippers_fdp_over_20pct": 0.015,
-        "dollar_power": 0.8204,
-        "disputes_per_month": 7.75,
+        "share_of_shippers_fdp_over_20pct": 0.005,
+        "dollar_power": 0.8147,
+        "disputes_per_month": 7.87,
         "wrong_disputes_per_month": 0.1,
-        "recovered_per_month": 643.75,
-        "overbilled_per_month": 783.19
+        "recovered_per_month": 657.26,
+        "overbilled_per_month": 805.68
       }
     }
   }

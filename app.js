@@ -306,7 +306,7 @@ function openPanel(id) {
         </div>
         <div class="chart">${densityChart(r, rg)}</div>
         <table class="units"><thead><tr><th>Handling unit (BOL)</th><th>Your scans: height</th><th>Carrier height</th><th>Footprint</th><th>z</th></tr></thead><tbody>
-          ${units.map((u, i) => `<tr><td>${i + 1}. ${esc(u.name)} <span class="sub">${u.pid}</span></td><td>${fmtN(u.s.mh)} in ± ${fmtN(u.s.sh)}</td><td class="${u.zH > 3 ? 'flag' : ''}">${u.meas ? u.meas.h + ' in' : '—'}</td><td class="${u.fpOk ? '' : 'flag'}">${u.fp}</td><td class="${u.zH > 3 ? 'flag' : ''}">${u.zH == null ? '—' : fmtN(u.zH)}</td></tr>`).join('')}
+          ${units.map((u, i) => `<tr><td>${i + 1}. ${esc(u.name)} <span class="sub" title="${certSourced(u.pid) ? 'Profile built from upheld carrier certificates' : 'Profile built from your DC dimensioner'}">${u.pid}${certSourced(u.pid) ? ' · certificates' : ''}</span></td><td>${fmtN(u.s.mh)} in ± ${fmtN(u.s.sh)}</td><td class="${u.zH > 3 ? 'flag' : ''}">${u.meas ? u.meas.h + ' in' : '—'}</td><td class="${u.fpOk ? '' : 'flag'}">${u.fp}</td><td class="${u.zH > 3 ? 'flag' : ''}">${u.zH == null ? '—' : fmtN(u.zH)}</td></tr>`).join('')}
           ${extra > 0 ? r.carrier_measured.units.slice(r.units.length).map((u) => `<tr><td class="flag">Extra unit on certificate (not on BOL)</td><td>—</td><td class="flag">${u.h} in</td><td class="flag">${u.l}×${u.w}</td><td class="flag">count</td></tr>`).join('') : ''}
         </tbody></table>
         <div class="row" style="border-top:1px solid var(--border-2);font-size:13px;gap:24px;flex-wrap:wrap">
@@ -346,6 +346,7 @@ function timeAgo(iso) { const s = (Date.now() - new Date(iso).getTime()) / 1000;
 function staleProfile(r) {
   return r.units.map((pid) => ({ pid, gap: S.stats[pid].mh - S.profiles[pid].h })).sort((a, b) => b.gap - a.gap)[0].pid;
 }
+const certSourced = (pid) => (S.ds.cert_sourced || []).includes(pid);
 function driverLabel(r) { return { count: 'Unit count', height: 'Unit height', footprint: 'Footprint', weight: 'Weight', density: 'Density' }[r.driver]; }
 
 function verdictText(r, units, extra, rg, stale) {
@@ -455,7 +456,7 @@ function renderProfiles() {
   <div class="split"><div class="table-wrap"><table class="grid" aria-label="Pallet profiles">
     <thead><tr><th>Profile</th><th class="num">BOL height</th><th class="num">Scan height</th><th class="num">Scan pcf</th><th class="num">BOL class</th><th class="num">Scan class</th><th>Reclass risk</th><th class="num hide-sm">Room above break</th></tr></thead>
     <tbody>${rows.map((x) => `<tr data-p="${x.p.id}" tabindex="0" class="${x.p.id === sel.p.id ? 'sel' : ''}">
-      <td title="${esc(x.p.name)}"><span class="mono">${x.p.id}</span> ${esc(x.p.name)} ${x.stale ? '<span class="badge yellow">Height drift</span>' : ''}</td>
+      <td title="${esc(x.p.name)}"><span class="mono">${x.p.id}</span> ${esc(x.p.name)} ${x.stale ? '<span class="badge yellow">Height drift</span>' : ''}${certSourced(x.p.id) ? ' <span class="badge gray">Certificates</span>' : ''}</td>
       <td class="num">${x.p.h} in</td><td class="num ${x.stale ? 'flagc' : ''}">${fmtN(x.s.mh)} in</td><td class="num">${fmtN(x.scanD)}</td><td class="num">${x.declared}</td><td class="num">${x.scanCls === x.declared ? x.scanCls : `<b style="color:var(--red)">${x.scanCls}</b>`}</td>
       <td>${riskCell(x.risk)}</td><td class="num hide-sm">${pct(x.margin, 0)}</td></tr>`).join('')}</tbody></table></div>
     <aside class="side" aria-label="Profile what-if">${profileSide(sel)}</aside></div>`;
@@ -488,7 +489,7 @@ function profileSide(x) {
   const r1 = reclassRisk(x.s, x.scans, x.declared, dh);
   const c1 = classForDensity(d1);
   return `<h3>${x.p.id} · ${esc(x.p.name)}</h3>
-  <div class="sub" style="font-size:13px">${x.s.n} dimensioner scans · ${x.s.l}×${x.s.w} in footprint · median ${Math.round(Math.exp(x.s.mw)).toLocaleString()} lb</div>
+  <div class="sub" style="font-size:13px">${x.s.n} ${certSourced(x.p.id) ? 'upheld carrier certificates (no DC dimensioner)' : 'dimensioner scans'} · ${x.s.l}×${x.s.w} in footprint · median ${Math.round(Math.exp(x.s.mw)).toLocaleString()} lb</div>
   ${x.stale ? `<p style="font-size:13px;line-height:20px;margin:12px 0 0"><span class="badge yellow">Height drift</span> BOLs use ${x.p.h} in, but your scans median ${fmtN(x.s.mh)} in. ${x.risk > 0.05 ? `An accurate carrier inspection will reclass this pallet ${pct(x.risk, 0)} of the time, and those reclasses are correct, so fix the master data instead of disputing.` : `The drift has not crossed a class break yet (${pct(x.margin, 0)} density headroom), but BOL weights and cubes are off.`}</p>` : `<p style="font-size:13px;line-height:20px;margin:12px 0 0;color:var(--muted)">Master data matches your scans. ${x.risk > 0.05 ? `This pallet sits ${pct(x.margin, 0)} above a class break, so ${pct(x.risk, 0)} of builds would class worse on an accurate inspection.` : `Accurate inspections should not reclass it.`}</p>`}
   <div style="margin-top:16px"><label for="dh" style="font-size:13px;font-weight:600">What-if: change pallet height</label>
   <div style="display:flex;align-items:center;gap:10px"><input type="range" class="range" id="dh" min="-8" max="4" step="1" value="${dh}" aria-valuetext="${dh} inches"><span class="mono" style="width:52px;text-align:right">${dh > 0 ? '+' : ''}${dh} in</span></div></div>

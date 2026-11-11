@@ -2,7 +2,7 @@
 
 **Live demo:** https://mohith26.github.io/loop-reclass-defense/
 
-Since NMFC Docket 2025-1 (effective 19 July 2025) moved most LTL freight to the 13-step density scale, every inch a carrier's dimensioner reads on a pallet can move the class, and reweigh/reclass adjustments land on invoices with little more than an inspection certificate behind them. Loop's own guide says these disputes are winnable but the burden of proof sits with the shipper, and the documentation rarely exists at scale. Reclass Defense is a concept for a view inside Loop Payables that turns the shipper's own dimensioner and scale history into that proof: for every inspection adjustment it tests whether the carrier's measurement is plausible for these pallets, picks which ones to dispute with a stated bound on how many disputes will turn out wrong, and hands each one to the Exception Agent with an evidence packet. In a 200-shipper backtest it recovered **98.0%** of overbilled dollars while only **6.3%** of filed disputes were ones the carrier had right (target 10%); a fixed "density 10% off the BOL" rule recovered 94.8% with 24.6% wrong.
+Since NMFC Docket 2025-1 (effective 19 July 2025) moved most LTL freight to the 13-step density scale, every inch a carrier's dimensioner reads on a pallet can move the class, and reweigh/reclass adjustments land on invoices with little more than an inspection certificate behind them. Loop's own guide says these disputes are winnable but the burden of proof sits with the shipper, and the documentation rarely exists at scale. Reclass Defense is a concept for a view inside Loop Payables that turns the shipper's own dimensioner and scale history into that proof: for every inspection adjustment it tests whether the carrier's measurement is plausible for these pallets, picks which ones to dispute with a stated bound on how many disputes will turn out wrong, and hands each one to the Exception Agent with an evidence packet. In a 200-shipper backtest it recovered **98.4%** of overbilled dollars while only **6.3%** of filed disputes were ones the carrier had right (target 10%); a fixed "density 10% off the BOL" rule recovered 94.3% with 23.6% wrong.
 
 ![Reclass Defense inside Loop Payables](docs/screenshot.png)
 
@@ -17,7 +17,7 @@ State (decisions, target) persists in `localStorage`; every view is deep-linkabl
 
 ## How it works
 
-1. **Expected shipment from your own scans.** Each BOL handling unit maps to a pallet profile (SKU build). Robust per-profile statistics (median and 1.4826·MAD of height, weight and density) come from the shipper's DC dimensioner scans.
+1. **Expected shipment from your own scans.** Each BOL handling unit maps to a pallet profile (SKU build). Robust per-profile statistics (median and 1.4826·MAD of height, weight and density) come from the shipper's DC dimensioner scans, or, for profiles without dimensioner coverage, from the measurements on past carrier certificates that were upheld (data Loop already extracts).
 2. **Optimal unit matching.** The carrier's certificate lists handling units in arbitrary order; `assignUnits` finds the minimum-cost assignment of measured units to BOL units (exhaustive over permutations, n ≤ 7, which covers LTL).
 3. **Nonconformity score.** The largest one-sided standardized residual among shipment density (lower = worse class), shipment weight (heavier), each matched unit's height (taller) and footprint (bigger), plus a hard flag for a handling-unit count mismatch.
 4. **Conformal p-values.** Calibrated against the shipper's carrier-upheld inspection adjustments from the last 12 months (the outcomes Loop's Exception Agent already records). Under exchangeability with correct inspections each p-value is super-uniform (split conformal; Bates, Candès, Lei, Romano, Zrnic 2023, *Testing for outliers with conformal p-values*).
@@ -30,13 +30,13 @@ All logic lives in `src/core.js` (pure functions, no DOM). The browser computes 
 
 | Decision rule | Avg wrong-dispute rate | Worst-decile shipper | Shippers over 20% wrong | Overbilled $ recovered | Disputes / month |
 |---|---:|---:|---:|---:|---:|
-| **Reclass Defense** (BH on conformal p) | **6.3%** | 16.7% | 4% | **98.0%** | 13.0 |
-| Fixed rule: density 5% off BOL | 52.2% | 71.0% | 98% | 99.5% | 27.2 |
-| Fixed rule: density 10% off BOL | 24.6% | 50.0% | 53% | 94.8% | 14.5 |
-| Fixed rule: density 20% off BOL | 1.4% | 0.0% | 2% | 82.0% | 7.8 |
-| Dispute everything | 66.7% | 80.7% | 100% | 100% | 40.4 |
+| **Reclass Defense** (BH on conformal p) | **6.3%** | 16.7% | 4% | **98.4%** | 13.3 |
+| Fixed rule: density 5% off BOL | 51.5% | 70.3% | 98% | 99.5% | 27.4 |
+| Fixed rule: density 10% off BOL | 23.6% | 45.0% | 53% | 94.3% | 14.7 |
+| Fixed rule: density 20% off BOL | 1.1% | 0.0% | 0% | 81.5% | 7.9 |
+| Dispute everything | 66.5% | 81.1% | 100% | 100% | 40.6 |
 
-At a 5% target: 2.7% wrong, 97.1% of dollars. Each simulated shipper has its own master-data staleness (0-45% of profiles with 2-7 in height drift), carrier error rates (x0.5-1.5) and pallet-build variability, which is why a single fixed threshold is too timid for some shippers and floods carriers for others. The headline numbers are recomputed from scratch in the test suite.
+At a 5% target: 3.0% wrong, 97.2% of dollars. Each simulated shipper has its own master-data staleness (0-45% of profiles with 2-7 in height drift), carrier error rates (x0.5-1.5) and pallet-build variability, which is why a single fixed threshold is too timid for some shippers and floods carriers for others. The headline numbers are recomputed from scratch in the test suite.
 
 ## Data
 
@@ -46,7 +46,7 @@ Synthetic, seeded (`node data/generate.mjs`), loosely seeded from published figu
 
 * The FDR bound assumes new correct inspections are exchangeable with the calibration set. A carrier that changes dimensioner hardware, or a shipper whose pallet builds drift quickly, breaks this; the fix is a rolling window or weighted conformal, which this demo does not implement.
 * Calibration needs labeled outcomes (carrier upheld vs reversed). Loop has these from dispute resolution; a new customer would start with a conservative target until a few hundred outcomes exist.
-* Units with no scan history fall back to master data, which is exactly what goes stale. The demo assumes every profile has scans.
+* Profiles without DC dimensioner coverage fall back to the measurements on past upheld carrier certificates (P11, P12 and P19 in the demo). That works but is noisier (heights rounded to the inch, fewer records), so those profiles produce weaker evidence. A brand-new SKU with neither falls back to master data, which is exactly what goes stale.
 * Only density-scale items are modeled. Items still classed by handling/stowability/liability (and the 77.5/110/150/200/500 classes) are out of scope.
 * "Wrong dispute" is known only in simulation. In production the right check is the realized reversal rate per carrier, monitored against the target.
 

@@ -83,12 +83,19 @@ function worldProfiles(r, seed) {
   return { profiles, errScale, staleShare };
 }
 
+// Profiles with no DC dimensioner coverage fall back to the measurements on
+// past carrier inspection certificates that were upheld (accurate inspections:
+// heights rounded up to the inch, occasional +1 in footprint reads).
+export const CERT_SOURCED = ['P11', 'P12', 'P19'];
+
 function scanProfiles(r, PROFILES) {
   const scans = {};
   for (const p of PROFILES) {
-    const n = 80 + Math.floor(r() * 120);
+    const cert = CERT_SOURCED.includes(p.id);
+    const n = cert ? 40 + Math.floor(r() * 40) : 80 + Math.floor(r() * 120);
     scans[p.id] = Array.from({ length: n }, () => {
       const t = trueUnit(p, r);
+      if (cert) return { l: p.l + (r() < 0.15 ? 1 : 0), w: p.w + (r() < 0.15 ? 1 : 0), h: Math.ceil(t.h + 0.25 * r.normal()), weight: Math.round(t.weight * (1 + 0.003 * r.normal())) };
       return { l: p.l, w: p.w, h: round2(t.h + 0.2 * r.normal()), weight: round2(t.weight * (1 + 0.002 * r.normal())) };
     });
   }
@@ -245,7 +252,7 @@ if (process.argv[1] && process.argv[1].endsWith('generate.mjs')) {
   const DEMO_SEED = 1;
   const w = buildWorld(DEMO_SEED);
   const dataset = {
-    seed: DEMO_SEED, shipper: 'Northfield Snacks Co.', month: 'October 2026',
+    seed: DEMO_SEED, shipper: 'Northfield Snacks Co.', month: 'October 2026', cert_sourced: CERT_SOURCED,
     profiles: PROFILES, lanes: w.lanes,
     scans: w.scans,
     calibration: calibrationScores(w.history, w.stats).map((x) => Math.round(x * 1e4) / 1e4),
